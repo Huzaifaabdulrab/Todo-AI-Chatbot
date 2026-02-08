@@ -11,14 +11,14 @@ class Settings(BaseSettings):
 
     # Database Configuration
     DATABASE_URL: str
-
+    
     # JWT Configuration
     JWT_SECRET: str
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRATION_HOURS: int = 24
 
     # CORS Configuration
-    CORS_ORIGINS: str = "https://hackathon2fullstacktodoapp.vercel.app/"
+    CORS_ORIGINS: str = "http://localhost:3000/"
 
     # Application Settings
     APP_NAME: str = "Todo Backend API"
