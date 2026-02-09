@@ -2,8 +2,8 @@
 import os
 import json
 from typing import Dict, Any, List, Optional
-from google import genai
-from google.genai.types import GenerationConfig
+import google.generativeai as genai
+from google.generativeai.types import GenerationConfig
 from pydantic import BaseModel
 import logging
 
