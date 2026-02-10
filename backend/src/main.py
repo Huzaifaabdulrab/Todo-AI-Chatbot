@@ -6,15 +6,15 @@ import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import sys
-import os
-sys.path.append(os.path.dirname(__file__)) 
+
 from core.config import settings
 from core.database import create_db_and_tables
 from middleware.logging import LoggingMiddleware
 from middleware.errors import ErrorHandlingMiddleware
 from api import auth as auth_router
 from api import tasks as tasks_router
+from api import chat as chat_router
+from api import conversations as conversations_router
 
 # Configure logging
 logging.basicConfig(
@@ -46,7 +46,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
-    description="A modern, secure, multi-user todo application with JWT authentication",
+    description="A modern, secure, multi-user AI-Powered Todo application with JWT authentication",
     lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc",
@@ -93,6 +93,8 @@ async def health_check():
 # API Routes
 app.include_router(auth_router.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(tasks_router.router, prefix="/api/tasks", tags=["Tasks"])
+app.include_router(chat_router.router, prefix="/api/chat", tags=["Chat"])
+app.include_router(conversations_router.router, prefix="/api/conversations", tags=["Conversations"])
 
 
 if __name__ == "__main__":

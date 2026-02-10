@@ -11,14 +11,14 @@ class Settings(BaseSettings):
 
     # Database Configuration
     DATABASE_URL: str
-    
+
     # JWT Configuration
     JWT_SECRET: str
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRATION_HOURS: int = 24
 
     # CORS Configuration
-    CORS_ORIGINS: str = "http://localhost:3000/"
+    CORS_ORIGINS: str = "http://localhost:3000"
 
     # Application Settings
     APP_NAME: str = "Todo Backend API"
@@ -28,6 +28,10 @@ class Settings(BaseSettings):
     # Server Configuration
     HOST: str = "0.0.0.0"
     PORT: int = 8000
+
+    # OpenAI Configuration
+    GEMINI_API_KEY: str
+    GEMINI_MODEL: str = "gemini-1.5-pro"
 
     model_config = SettingsConfigDict(
         env_file=".env",
