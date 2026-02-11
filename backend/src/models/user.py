@@ -18,6 +18,7 @@ class User(SQLModel, table=True):
     Each user can have multiple tasks (one-to-many relationship).
     """
     __tablename__ = "users"
+    __table_args__ = {"extend_existing": True}
 
     id: UUID = Field(
         default_factory=uuid4,

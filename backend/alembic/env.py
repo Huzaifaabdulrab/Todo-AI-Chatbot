@@ -12,7 +12,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from core.config import settings
-from models import User, Task  # Import all models to register with SQLModel
+from models.user import User
+from models.task import Task
+from models.conversation import Conversation
+from models.message import Message
 from sqlmodel import SQLModel
 
 # Alembic Config object

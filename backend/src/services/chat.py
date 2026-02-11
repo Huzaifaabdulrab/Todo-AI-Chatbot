@@ -4,12 +4,9 @@ Handles message processing, AI agent invocation, and response storage.
 """
 from uuid import UUID
 from sqlmodel import Session
-from models.message import Message
-from services.conversations import (
-    store_message,
-    get_recent_messages
-)
-from mcp.agent import ChatAgent
+from src.models.message import Message
+from src.services.conversation import store_message,    get_recent_messages
+from src.mcp.agent import ChatAgent
 
 def process_user_message(session: Session, user_id: UUID, message_content: str, conversation_id: UUID) -> Message:
     """

@@ -6,7 +6,7 @@ import bcrypt
 from jose import JWTError, jwt
 from datetime import datetime, timedelta, timezone
 from typing import Optional
-from .config import settings
+from src.core.config import settings
 
 
 def hash_password(password: str) -> str:

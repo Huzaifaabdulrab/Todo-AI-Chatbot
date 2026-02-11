@@ -8,11 +8,11 @@ from typing import Annotated, List, Optional
 from pydantic import BaseModel, Field
 from uuid import UUID
 
-from core.database import get_session
-from api.dependencies import get_current_user
-from models.user import User
-from models.message import Message
-from services.conversations import (
+from src.core.database import get_session
+from src.api.dependencies import get_current_user
+from src.models.user import User
+from src.models.message import Message
+from src.services.conversation import (
     list_conversations,
     get_conversation_by_id,
     create_conversation,

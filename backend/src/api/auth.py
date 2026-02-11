@@ -7,10 +7,10 @@ from sqlmodel import Session
 from pydantic import BaseModel, EmailStr, Field
 from typing import Annotated
 
-from core.database import get_session
-from services.auth import AuthService
-from api.dependencies import get_current_user
-from models.user import User
+from src.core.database import get_session
+from src.services.auth import AuthService
+from src.api.dependencies import get_current_user
+from src.models.user import User
 
 
 router = APIRouter()

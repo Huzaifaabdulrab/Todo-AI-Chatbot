@@ -17,6 +17,7 @@ class Task(SQLModel, table=True):
     Belongs to a user via user_id foreign key.
     """
     __tablename__ = "tasks"
+    __table_args__ = {"extend_existing": True}
 
     id: UUID = Field(
         default_factory=uuid4,

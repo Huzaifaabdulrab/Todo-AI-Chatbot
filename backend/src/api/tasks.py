@@ -8,11 +8,11 @@ from pydantic import BaseModel, Field
 from typing import Annotated, List, Optional
 from uuid import UUID
 
-from core.database import get_session
-from services.tasks import TasksService
-from api.dependencies import get_current_user
-from models.user import User
-from models.task import Task
+from src.core.database import get_session
+from src.services.tasks import TasksService
+from src.api.dependencies import get_current_user
+from src.models.user import User
+from src.models.task import Task
 
 
 router = APIRouter()

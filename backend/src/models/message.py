@@ -17,6 +17,7 @@ class Message(SQLModel, table=True):
     Each message belongs to a conversation.
     """
     __tablename__ = "messages"
+    __table_args__ = {"extend_existing": True}
 
     id: UUID = Field(
         default_factory=uuid4,

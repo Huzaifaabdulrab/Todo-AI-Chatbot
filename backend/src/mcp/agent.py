@@ -8,9 +8,8 @@ from sqlmodel import Session
 
 import google.generativeai as genai
 from google.generativeai.types import Tool, FunctionDeclaration
-
-from core.config import settings
-from mcp.tools import add_task, list_tasks, complete_task, update_task, delete_task
+from src.core.config import settings
+from src.mcp.tool import add_task, list_tasks, complete_task, update_task, delete_task
 
 class ChatAgent:
     def __init__(self, session: Session, user_id: UUID):

@@ -6,8 +6,8 @@ from typing import List, Optional, Dict, Any
 from uuid import UUID
 from sqlmodel import Session
 import logging
-from services.tasks import TasksService
-from models.task import Task
+from src.services.tasks import TasksService
+from src.models.task import Task
 
 logger = logging.getLogger(__name__)
 

@@ -7,8 +7,8 @@ from fastapi import HTTPException, status
 from typing import List
 from uuid import UUID
 
-from models.task import Task
-from models.user import User
+from src.models.task import Task
+from src.models.user import User
 from datetime import datetime, timezone
 
 

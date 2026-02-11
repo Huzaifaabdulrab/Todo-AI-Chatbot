@@ -6,8 +6,8 @@ from sqlmodel import Session, select
 from fastapi import HTTPException, status
 from typing import Optional
 
-from models.user import User
-from core.security import hash_password, verify_password, create_access_token
+from src.models.user import User
+from src.core.security import hash_password, verify_password, create_access_token
 from datetime import datetime, timezone
 
 

@@ -7,14 +7,14 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from core.config import settings
-from core.database import create_db_and_tables
-from middleware.logging import LoggingMiddleware
-from middleware.errors import ErrorHandlingMiddleware
-from api import auth as auth_router
-from api import tasks as tasks_router
-from api import chat as chat_router
-from api import conversations as conversations_router
+from src.core.config import settings
+from src.core.database import create_db_and_tables
+from src.middleware.logging import LoggingMiddleware
+from src.middleware.errors import ErrorHandlingMiddleware
+from src.api import auth as auth_router
+from src.api import tasks as tasks_router
+from src.api import chat as chat_router
+from src.api import conversation as conversation_router
 
 # Configure logging
 logging.basicConfig(
@@ -94,7 +94,7 @@ async def health_check():
 app.include_router(auth_router.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(tasks_router.router, prefix="/api/tasks", tags=["Tasks"])
 app.include_router(chat_router.router, prefix="/api/chat", tags=["Chat"])
-app.include_router(conversations_router.router, prefix="/api/conversations", tags=["Conversations"])
+app.include_router(conversation_router.router, prefix="/api/conversations", tags=["Conversations"])
 
 
 if __name__ == "__main__":

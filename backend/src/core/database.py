@@ -4,14 +4,14 @@ Provides database engine and session creation utilities.
 """
 from sqlmodel import create_engine, Session, SQLModel
 from typing import Generator
-from .config import settings
+from src.core.config import settings
 
 # Import all models to register them with SQLModel metadata
 # This ensures all tables are created when create_db_and_tables is called
-from models.user import User
-from models.task import Task
-from models.conversation import Conversation
-from models.message import Message
+from src.models.user import User
+from src.models.task import Task
+from src.models.conversation import Conversation
+from src.models.message import Message
 
 
 # Create database engine with connection pooling

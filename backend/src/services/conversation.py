@@ -6,8 +6,8 @@ from datetime import datetime, timezone
 from typing import List, Optional
 from sqlmodel import Session, select
 
-from models.conversation import Conversation
-from models.message import Message
+from src.models.conversation import Conversation
+from src.models.message import Message
 
 
 def get_or_create_conversation(session: Session, user_id: UUID, conversation_id: Optional[UUID] = None) -> Conversation:

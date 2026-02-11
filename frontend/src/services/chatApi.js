@@ -1,108 +1,50 @@
-/**
- * API service for chat functionality
- */
+  // src/services/chatApi.js
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000/api';
-
-class ChatApi {
-  constructor() {
-    // Token will be retrieved from localStorage when needed
-  }
-
-  /**
-   * Get authentication token from localStorage or cookies
-   */
-  getToken() {
-    // Try to get token from localStorage (using the same key as useAuth hook)
-    if (typeof window !== 'undefined') {
+  class ChatApi {
+    getToken() {
+      if (typeof window === 'undefined') return null;
       return localStorage.getItem('auth_token');
     }
-    return null;
-  }
 
-  /**
-   * Process a chat message
-   */
-  async processMessage(message, sessionId = null) {
-    const token = this.getToken();
-    const response = await fetch(`${API_BASE_URL}/chat`, {
-      method: 'POST',
-      headers: {
+    async request(endpoint, options = {}) {
+      const token = this.getToken();
+      const headers = {
         'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` }),
-      },
-      body: JSON.stringify({
-        message,
-        session_id: sessionId,
-      }),
-    });
+        ...(token && { Authorization: `Bearer ${token}` }),
+        ...options.headers,
+      };
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        ...options,
+        headers,
+      });
 
-    return await response.json();
-  }
-
-  /**
-   * Get user's chat sessions
-   */
-  async getUserSessions() {
-    const token = this.getToken();
-    const response = await fetch(`${API_BASE_URL}/chat/sessions`, {
-      method: 'GET',
-      headers: {
-        ...(token && { 'Authorization': `Bearer ${token}` }),
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
-  }
-
-  /**
-   * Get messages for a specific session
-   */
-  async getSessionMessages(sessionId, limit = 50, offset = 0) {
-    const token = this.getToken();
-    const response = await fetch(
-      `${API_BASE_URL}/chat/session/${sessionId}/messages?limit=${limit}&offset=${offset}`,
-      {
-        method: 'GET',
-        headers: {
-          ...(token && { 'Authorization': `Bearer ${token}` }),
-        },
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      return response.json();
     }
 
-    return await response.json();
-  }
-
-  /**
-   * Get available tools
-   */
-  async getAvailableTools() {
-    const token = this.getToken();
-    const response = await fetch(`${API_BASE_URL}/tools`, {
-      method: 'GET',
-      headers: {
-        ...(token && { 'Authorization': `Bearer ${token}` }),
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    async getUserSessions() {
+      return this.request('/conversations');
     }
 
-    return await response.json();
-  }
-}
+    async getSessionMessages(conversationId) {
+      return this.request(`/conversations/${conversationId}`);
+    }
 
-export default new ChatApi();
+    async processMessage(message, conversationId = null) {
+      return this.request('api/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message,
+          conversation_id: conversationId,
+        }),
+      });
+    }
+  }
+
+  const chatApi = new ChatApi();
+  export default chatApi;
