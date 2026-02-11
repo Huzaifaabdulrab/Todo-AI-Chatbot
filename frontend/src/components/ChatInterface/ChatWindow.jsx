@@ -29,23 +29,42 @@ const ChatWindow = ({ userId }) => {
 
     const initSession = async () => {
       try {
-        // Get existing sessions or start a new one
-        const response = await chatApi.getUserSessions();
-        if (response.sessions && response.sessions.length > 0) {
-          // Use the most recent session
-          setSessionId(response.sessions[0].id);
-
-          // Load messages from the session
-          const messagesResponse = await chatApi.getSessionMessages(response.sessions[0].id);
+        // Try to get session ID from localStorage first
+        const storedSessionId = localStorage.getItem('chat-session-id');
+        
+        if (storedSessionId) {
+          // Use stored session ID if available
+          setSessionId(storedSessionId);
+          
+          // Load messages from the stored session
+          const messagesResponse = await chatApi.getSessionMessages(storedSessionId);
           setMessages(messagesResponse.messages.map(msg => ({
             id: msg.id,
             text: msg.content,
-            sender: msg.sender_type.toLowerCase(),
-            timestamp: msg.timestamp
+            sender: msg.role, // Changed from sender_type to role
+            timestamp: msg.created_at
           })));
         } else {
-          // Create a new session by sending a welcome message
-          setMessages([{ id: 'welcome', text: 'Hello! How can I help you today?', sender: 'ai', timestamp: new Date().toISOString() }]);
+          // Get existing sessions or start a new one
+          const response = await chatApi.getUserSessions();
+          if (response.length > 0) { // Changed from response.sessions to response directly
+            // Use the most recent session
+            const mostRecentSession = response[0]; // Assuming the API returns sessions in descending order by date
+            setSessionId(mostRecentSession.id);
+            localStorage.setItem('chat-session-id', mostRecentSession.id);
+
+            // Load messages from the session
+            const messagesResponse = await chatApi.getSessionMessages(mostRecentSession.id);
+            setMessages(messagesResponse.messages.map(msg => ({
+              id: msg.id,
+              text: msg.content,
+              sender: msg.role, // Changed from sender_type to role
+              timestamp: msg.created_at
+            })));
+          } else {
+            // Create a new session by sending a welcome message
+            setMessages([{ id: 'welcome', text: 'Hello! How can I help you today?', sender: 'ai', timestamp: new Date().toISOString() }]);
+          }
         }
       } catch (error) {
         console.error('Error initializing chat session:', error);
@@ -77,19 +96,16 @@ const ChatWindow = ({ userId }) => {
 
       // Update session ID if it's the first message
       if (!sessionId) {
-        setSessionId(response.session_id);
+        setSessionId(response.conversation_id);
+        localStorage.setItem('chat-session-id', response.conversation_id);
       }
 
       // Add AI response to the chat
       const aiMessage = {
         id: `ai-${Date.now()}`,
-        text: response.response,
+        text: response.message.content,
         sender: 'ai',
-        timestamp: new Date().toISOString(),
-        intent: response.intent,
-        entities: response.entities,
-        toolUsed: response.tool_used,
-        toolResult: response.tool_result
+        timestamp: new Date().toISOString()
       };
 
       setMessages(prev => [...prev, aiMessage]);
@@ -97,9 +113,11 @@ const ChatWindow = ({ userId }) => {
       console.error('Error sending message:', error);
       const errorMessage = {
         id: `error-${Date.now()}`,
-        text: 'Sorry, I encountered an error processing your request.',
+        text: error.message || 'Sorry, I encountered an error processing your request.',
         sender: 'ai',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        isRetryable: true, // Mark as retryable
+        originalText: text // Store original text for retry
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
