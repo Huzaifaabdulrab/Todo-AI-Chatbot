@@ -21,7 +21,21 @@
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // Handle different error statuses appropriately
+        if (response.status === 404) {
+          throw new Error(`API endpoint not found: ${endpoint}. Status: ${response.status}`);
+        } else if (response.status === 500) {
+          throw new Error(`Server error occurred. Please try again later. Status: ${response.status}`);
+        } else {
+          // Try to get error details from response
+          let errorDetails;
+          try {
+            errorDetails = await response.json();
+          } catch (e) {
+            errorDetails = { detail: response.statusText };
+          }
+          throw new Error(`HTTP error! status: ${response.status}, details: ${JSON.stringify(errorDetails)}`);
+        }
       }
 
       return response.json();
@@ -36,7 +50,7 @@
     }
 
     async processMessage(message, conversationId = null) {
-      return this.request('api/chat', {
+      return this.request('/chat/chat', {
         method: 'POST',
         body: JSON.stringify({
           message,

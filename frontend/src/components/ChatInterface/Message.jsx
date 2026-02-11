@@ -22,7 +22,7 @@ const Message = ({ message }) => {
       
       <div className={`max-w-[80%] ${isUser ? 'bg-blue-500 text-white' : 'bg-white border border-gray-200'} rounded-lg px-4 py-2 shadow-sm`}>
         <div className="text-sm">{message.text}</div>
-        
+
         {/* Show additional information for AI responses */}
         {isAI && message.intent && (
           <div className="mt-2 pt-2 border-t border-gray-200 text-xs text-gray-500">
@@ -45,7 +45,25 @@ const Message = ({ message }) => {
             )}
           </div>
         )}
-        
+
+        {/* Show retry button for error messages */}
+        {isAI && message.isRetryable && message.originalText && (
+          <div className="mt-2">
+            <button 
+              className="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded"
+              onClick={() => {
+                // Call a function to retry the original message
+                if (window.confirm("Retry sending this message?")) {
+                  // This would need to be passed from parent component
+                  console.log("Retrying message:", message.originalText);
+                }
+              }}
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
         <div className={`text-xs mt-1 ${isUser ? 'text-blue-100' : 'text-gray-400'}`}>
           {formatTime(message.timestamp)}
         </div>

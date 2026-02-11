@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     PORT: int = 8000
 
     # OpenAI Configuration
-    GEMINI_API_KEY: str
+    GEMINI_API_KEY: str = "AIzaSyDORHeqhGJLy9JJzOjgcL3sNg96osq3W70"
     GEMINI_MODEL: str = "gemini-1.5-pro"
 
     model_config = SettingsConfigDict(
